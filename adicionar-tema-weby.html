@@ -1,0 +1,36 @@
+<script>
+  //Importando somente quando necessário
+
+  function importarScript(url) {
+    $.ajax({
+      url: url,
+      dataType: 'script',
+      cache: true, // or get new, fresh copy on every page load
+      success: function () {
+        console.log("Importou com exito: " + url)
+          $('#44557-content-indice-prioridade').load('https://files.cercomp.ufg.br/weby/up/90/o/teste-importar-html.html');
+        console.log("carregou HTML")
+        //carregarCalculadoraIndicePrioridade()
+      }
+    });
+  }
+
+
+  if ($("#44557-content-indice-prioridade").length > 0) {
+    console.log("Encontrou a div '44557-content-indice-prioridade'")
+    importarScript('https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js')
+    console.log("Terminou importação!!!!!")
+    //Não aceitou o MIME TYPE
+    //importarScript('https://files.cercomp.ufg.br/weby/up/90/o/calculadora-indice-prioridade.js')
+
+
+
+  } else {
+    //console.log("Não tem a div 'content-indice-prioridade'")
+  }
+
+  //Colar aqui o javascript
+  
+
+
+</script>
