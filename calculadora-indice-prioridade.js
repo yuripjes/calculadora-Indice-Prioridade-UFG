@@ -1,15 +1,3 @@
-//Vue.component("Conteudo", Conteudo);
-
-/*  new Vue({
-  data: () => ({ message: 'Row' }),
-  template: `
-  <div>
-    <h1>{{message}} your boat</h1>
-    <button v-on:click="message += ' row'">Add</button>
-  </div>
-  `
- 
-}).$mount('#app-calc-ip');*/
 
 const paragrafo1 = '§ 1º Para estudantes com apenas um período cursado, TA, QR, CHA e CHC serão calculados considerando-se apenas o período cursado.'
 const paragrafo2 = '§ 2º No caso de apenas um período cursado, se CHC for menor que 256h (duzentas e cinquenta e seis horas) então CHC será igual a 256h (duzentas e cinquenta e seis horas).'
@@ -27,93 +15,26 @@ var app = new Vue({
       anoPeriodoAtual: null,
       anosPeriodosDisponiveis: [],//Para facilitar a obtenção dos anos-períodos anteriores ao que o usuário selecionar no combobox
       anosPeriodosSelecionaveis: [], //vai para o combobox, tem os dois itens iniciais e finais removidos
-      /* primeiroPeriodo: {
-           descricaoPeriodo: "",
-           disciplinas: [
-               {
-                   disciplina: "",
-                   cargaHoraria: "",
-                   situacao: null
-               }]
-       },
-       */
+
       inputCHT: undefined,
       inputCHI: undefined,
       periodos: [],
       inputMatricula: undefined,
-      disciplinasFormatado: [],//para exibir ao final do cálculo
+
+      /*
+        Para exibir ao final do cálculo
+      */
+      disciplinasFormatado: [],
       calc: null,
       paragrafosAplicados: []
     }
   },
-  computed: {
-    /*
-    TODO: APAGAR
 
-    calc() {
-        let qr = 0
-        let chc = 0
-        let somaCHC = 0// Para nao inicializar o CHC com 512 ou 256 (§ 2º e § 3º)
-        let cha = 0
-        let cht = 0
-        let chi = 0
-        let ta = 0
-        let ti = 0
-        let ip = 0
-
-//TODO retirar variável computed e aproveitar este for no método Calcular()
-        this.periodos.forEach(periodo => {
-            periodo.disciplinas.forEach(disciplina => {
-                if (this.verificaReprovacaoPorFalta(disciplina.situacao)) {
-                    qr++
-                }
-
-                if (this.verificaCargaHorariaCursada(disciplina.situacao)) {
-                    somaCHC += Number(disciplina.cargaHoraria)
-                }
-
-                if (this.verificaCargaHorariaAprovada(disciplina.situacao)) {
-                    cha += Number(disciplina.cargaHoraria)
-                }
-            });
-        });
-
-
-        qr = somaCHC > 0 ? qr : NaN
-
-        chc = somaCHC > 0 ? this.contabilizaCargaHorariaCursada(somaCHC) : NaN //Para nao exibir CHC maior que zero sem o usuário preencher
-        cha = cha > 0 ? cha : NaN
-
-        cht = somaCHC > 0 ? this.inputCHT : NaN
-        chi = somaCHC > 0 ? this.inputCHI : NaN
-
-        ta = this.calcularTaxaAprovacao(cha, chc)
-        ti = this.calcularTaxaIntegralizacao(chi, cht)
-        ip = this.calcularIndicePrioridade(ta, ti, qr)
-
-        return {
-            qr: this.formatarNumero(qr, 0),
-            chc: this.formatarNumero(chc, 0),
-            cha: this.formatarNumero(cha, 0),
-            chi: this.formatarNumero(chi, 0), cht: this.formatarNumero(cht, 0),
-            ta: this.formatarNumero(ta, 2),
-            ti: this.formatarNumero(ti, 2),
-            ip: this.formatarNumero(ip, 2)
-        }
-    },*/
-
-
-
-  },
   mounted() {
-    console.log("Mounted()")
     const anoAtual = new Date().getFullYear();
-
 
     this.anoPeriodoAtual = anoAtual + '/' + 1
 
-    console.log("Ano/periodo atual: ")
-    console.log(this.anoPeriodoAtual)
     for (let i = anoAtual - 2; i <= anoAtual + 2; i++) {
       for (let j = 1; j <= 2; j++) {
         this.anosPeriodosDisponiveis.push(i + '/' + j)
@@ -122,7 +43,7 @@ var app = new Vue({
     }
 
 
-    this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(1, -3)]
+    this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(1, -5)]
     console.log("anosPeriodosDisponiveis: ")
     console.log(this.anosPeriodosDisponiveis)
 
@@ -170,7 +91,12 @@ var app = new Vue({
     limpar() {
       console.log("Limpou!!!")
     },
-    excluir(itemPeriodo, obj) {
+    excluir(itemPeriodo, obj, $event) {
+      //TODO: corrigir bug que está excluindo a disciplina quando pressionamos enter com o cursor dentro dos campos Disciplina ou Carga Horária
+      console.log("Excluir disciplina: ")
+      console.log(obj)
+      console.log("$event: ")
+      console.log($event)
       let index = itemPeriodo.disciplinas.indexOf(obj)
       itemPeriodo.disciplinas.splice(index, 1);
     },
@@ -476,7 +402,7 @@ var app = new Vue({
       <br /><br />
       <button v-on:click="definirPeriodos(2)">2</button>
 
-      <!--TODO: Remover este botão -->
+      <!--TODO: Remover este botão na versão final-->
       <br /><br />
       <button v-on:click="preencherUmPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 1 períodos de teste</button>      
       <br /><br />
@@ -509,11 +435,11 @@ var app = new Vue({
       <br />
 
       <label for="cht">CHT*</label>
-      <input id="cht" type="number" v-model="inputCHT" min="1" required></input>
+      <input id="cht" type="number" v-model.number="inputCHT" min="1" required></input>
       <br />
 
       <label for="chi">CHI*</label>
-      <input id="chi" type="number" v-model="inputCHI" min="1" required></input>
+      <input id="chi" type="number" v-model.number="inputCHI" min="1" required></input>
       <br /><br />
 
       <div style="border:1; border" v-for="(itemPeriodo, indexPeriodo) of periodos">
@@ -533,10 +459,10 @@ var app = new Vue({
           <tbody>
             <tr v-for="(item, indexDisciplina) of itemPeriodo.disciplinas">
               <td>
-                <input type="text" v-model="item.disciplina" :ref="'inputDisciplinas_'+indexPeriodo+'_Ref'"></input>
+                <input type="text" v-model.trim="item.disciplina" :ref="'inputDisciplinas_'+indexPeriodo+'_Ref'"></input>
               </td>
               <td>
-                <input type="number" v-model="item.cargaHoraria" min="1" max="9999" required></input>
+                <input type="number" v-model.number="item.cargaHoraria" min="1" max="9999" required></input>
               </td>
               <td>
                 <select v-model="item.situacao" required>
@@ -548,13 +474,13 @@ var app = new Vue({
                 </select>
               </td>
               <td>
-                <button v-on:click="excluir(itemPeriodo, item)" :disabled="itemPeriodo.disciplinas.length<=1"><i
+                <button type="button" @click.prevent.stop="excluir(itemPeriodo, item, $event)" :disabled="itemPeriodo.disciplinas.length<=1"><i
                     class="fa fa-trash" /></button>
               </td>
             </tr>
           </tbody>
         </table>
-        <button v-on:click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
+        <button type="button" @click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
 
       </div>
 
@@ -680,6 +606,9 @@ var app = new Vue({
     <pre>periodos: {{periodos}}</pre>
     <pre>disciplinasFormatado: {{disciplinasFormatado}}</pre>
     <pre>calc: {{calc}}</pre>
+
+     <pre>anosPeriodosSelecionaveis: {{anosPeriodosSelecionaveis}}</pre>
+      <pre>anosPeriodosDisponiveis: {{anosPeriodosDisponiveis}}</pre>
   </div>
 
     `,
