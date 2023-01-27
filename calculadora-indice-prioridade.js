@@ -4,7 +4,14 @@ const paragrafo2 = '§ 2º No caso de apenas um período cursado, se CHC for men
 
 const paragrafo3 = '§ 3º No caso dos dois últimos períodos cursados, se CHC for menor que 512h (quinhentas e doze horas), então CHC será igual a 512 (quinhentas e doze horas).'
 
+const valorMaximoTI=1
+const valorMaximoTA=1
+const valorMaximoIP=110
 
+//TODO: verificar se a comparação de números decimais ainda está apresentando problemas. Caso negativo, pode apagar este método
+const verificaMenorQue = (a, b) => {
+  return Math.abs(a) < Math.abs(b)
+}
 
 var app = new Vue({
   data() {
@@ -35,7 +42,7 @@ var app = new Vue({
 
     this.anoPeriodoAtual = anoAtual + '/' + 1
 
-    for (let i = anoAtual - 2; i <= anoAtual + 2; i++) {
+    for (let i = anoAtual - 3; i <= anoAtual + 2; i++) {
       for (let j = 1; j <= 2; j++) {
         this.anosPeriodosDisponiveis.push(i + '/' + j)
 
@@ -43,7 +50,7 @@ var app = new Vue({
     }
 
 
-    this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(1, -5)]
+    this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(4, 8)]
     console.log("anosPeriodosDisponiveis: ")
     console.log(this.anosPeriodosDisponiveis)
 
@@ -84,12 +91,6 @@ var app = new Vue({
           this.$refs.inputDisciplinas_1_Ref[indexUltimaDisciplina].focus()
         }
       });
-
-
-      console.log("Adicionou!")
-    },
-    limpar() {
-      console.log("Limpou!!!")
     },
     excluir(itemPeriodo, obj, $event) {
       //TODO: corrigir bug que está excluindo a disciplina quando pressionamos enter com o cursor dentro dos campos Disciplina ou Carga Horária
@@ -129,15 +130,31 @@ var app = new Vue({
     },
     calcularTaxaAprovacao(cha, chc) {
       let ta = (parseInt((cha / chc) * 100) / 100)
-      ta <= 1 ? ta : 1
+      console.log("TA: " + ta)
+      ta = ta > 1 ? valorMaximoTA : ta
       return ta.toFixed(2)
     },
+    //TODO: verificar pq está arredondando 
     calcularTaxaIntegralizacao(chi, cht) {
-      return (parseInt((chi / cht) * 100) / 100).toFixed(2)
+      let ti = (parseFloat((chi / cht) * 100) / 100)
+      console.log("TI: " + ti)
+      /*
+      Apagar se a comparação de números decimais estiver OK
+            if (verificaMenorQue(ti, 1))
+              return ti.toFixed(2)
+            else
+              return valorMaximoTI.toFixed(2)
+      */
+
+      ti = ti > 1 ? valorMaximoTI : ti
+
+      return ti.toFixed(2)
+
     },
     calcularIndicePrioridade(ta, ti, qr) {
-      let ip = (parseInt(((100 * ta) + (10 * ti) - (3 * qr)) * 100) / 100)
-      ip <= 110 ? ip : 110
+      let ip = (parseFloat(((100 * ta) + (10 * ti) - (3 * qr)) * 100) / 100)
+      console.log("IP: " + ip)
+      ip = ip > 110 ? valorMaximoIP : ip
       return ip.toFixed(2)
     },
     formatarNumero(num, digitos) {
@@ -162,9 +179,9 @@ var app = new Vue({
       this.etapa = 2
     },
 
-    selecionarAnoPeriodoAtual() {
+    selecionarAnoPeriodoAtual(anoPeriodo) {
       // pegar duas posições atras no array que vai para o <select menu>
-      let index = this.anosPeriodosDisponiveis.indexOf(this.anoPeriodoAtual)
+      let index = this.anosPeriodosDisponiveis.indexOf(anoPeriodo)
       if (this.periodos.length === 1) {
         this.periodos[0].descricao = `${this.anosPeriodosDisponiveis[index - 1]}`
       } else if (this.periodos.length === 2) {
@@ -272,36 +289,6 @@ var app = new Vue({
 
       this.etapa = 4
 
-
-
-
-
-
-
-      /*
-      apagar abaixo
-      
-                  this.disciplinasFormatado = []
-                  this.etapa = 4
-                  for(let per=0; per< this.periodos.length; per++){
-                      for(let dis=0; dis< this.periodos[per].disciplinas.length; dis++){
-      
-                          if(dis===0){
-                              this.disciplinasFormatado.push({
-                                  anoPeriodo:this.periodos[per].descricao
-                              })
-                          }
-      
-                          this.disciplinasFormatado.push({
-                              anoPeriodo: null,
-                              disciplina: this.periodos[per].disciplinas[dis].disciplina,
-                              cargaHoraria: this.periodos[per].disciplinas[dis].cargaHoraria,
-                              situacao: this.periodos[per].disciplinas[dis].situacao
-                          })
-                      }
-                  }
-                  console.log("Fim do cálculo!")
-                  console.log(this.disciplinasFormatado)*/
     },
 
 
