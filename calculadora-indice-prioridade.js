@@ -8,9 +8,12 @@ const valorMaximoTI=1
 const valorMaximoTA=1
 const valorMaximoIP=110
 
-//TODO: verificar se a comparação de números decimais ainda está apresentando problemas. Caso negativo, pode apagar este método
-const verificaMenorQue = (a, b) => {
-  return Math.abs(a) < Math.abs(b)
+const truncarDuasCasasDecimais = (valor) => {
+console.log(valor)
+  return (parseInt( valor * 100 ) / 100)
+  /*return Number(
+    valor.toString().match(/^\d+(?:\.\d{0,2})?/)
+  )*/
 }
 
 var app = new Vue({
@@ -49,11 +52,9 @@ var app = new Vue({
       }
     }
 
-
     this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(4, 8)]
     console.log("anosPeriodosDisponiveis: ")
     console.log(this.anosPeriodosDisponiveis)
-
 
     console.log("FIM Mounted()\n-----------------")
   },
@@ -70,9 +71,6 @@ var app = new Vue({
       this.inputCHI = undefined
       this.periodos = []
       this.inputMatricula = undefined
-
-
-
     },
     adicionar(itemPeriodo) {
       itemPeriodo.disciplinas.push({
@@ -93,11 +91,6 @@ var app = new Vue({
       });
     },
     excluir(itemPeriodo, obj, $event) {
-      //TODO: corrigir bug que está excluindo a disciplina quando pressionamos enter com o cursor dentro dos campos Disciplina ou Carga Horária
-      console.log("Excluir disciplina: ")
-      console.log(obj)
-      console.log("$event: ")
-      console.log($event)
       let index = itemPeriodo.disciplinas.indexOf(obj)
       itemPeriodo.disciplinas.splice(index, 1);
     },
@@ -129,33 +122,20 @@ var app = new Vue({
       }
     },
     calcularTaxaAprovacao(cha, chc) {
-      let ta = (parseInt((cha / chc) * 100) / 100)
-      console.log("TA: " + ta)
-      ta = ta > 1 ? valorMaximoTA : ta
-      return ta.toFixed(2)
+      console.log("TA: ")
+      let ta = truncarDuasCasasDecimais(cha / chc)
+      
+      return ta > 1 ? valorMaximoTA : ta
     },
-    //TODO: verificar pq está arredondando 
     calcularTaxaIntegralizacao(chi, cht) {
-      let ti = (parseFloat((chi / cht) * 100) / 100)
-      console.log("TI: " + ti)
-      /*
-      Apagar se a comparação de números decimais estiver OK
-            if (verificaMenorQue(ti, 1))
-              return ti.toFixed(2)
-            else
-              return valorMaximoTI.toFixed(2)
-      */
-
-      ti = ti > 1 ? valorMaximoTI : ti
-
-      return ti.toFixed(2)
-
+      console.log("TI: ")
+      let ti = truncarDuasCasasDecimais(chi / cht)
+      return ti > 1 ? valorMaximoTI : ti
     },
     calcularIndicePrioridade(ta, ti, qr) {
-      let ip = (parseFloat(((100 * ta) + (10 * ti) - (3 * qr)) * 100) / 100)
-      console.log("IP: " + ip)
-      ip = ip > 110 ? valorMaximoIP : ip
-      return ip.toFixed(2)
+      console.log("IP: ")
+      let ip = truncarDuasCasasDecimais((100 * ta) + (10 * ti) - (3 * qr))
+      return ip > 110 ? valorMaximoIP : ip
     },
     formatarNumero(num, digitos) {
       return isNaN(num) ? '-' : Number(num).toLocaleString('pt-BR', { minimumFractionDigits: digitos, maximumFractionDigits: digitos })
@@ -189,19 +169,12 @@ var app = new Vue({
         this.periodos[1].descricao = `${this.anosPeriodosDisponiveis[index - 1]}`
       }
 
-
-
-
       this.etapa = 3
       this.$nextTick(()=>{
-        let self = this
-        console.log(self.$refs) // Shows the mapRef object reference
-        console.log(self.$refs.mapRef) // returns undefined ???
         this.$refs.inputMatriculaRef.focus();
       });
       
     },
-    //TODO: trazer o calculo do IP para cá pois passamos a calcular somente ao clicar no botão
     calcular() {
 
       let qr = 0
@@ -213,7 +186,6 @@ var app = new Vue({
       let ta = 0
       let ti = 0
       let ip = 0
-
 
       this.paragrafosAplicados = []
       this.disciplinasFormatado = []
@@ -238,9 +210,6 @@ var app = new Vue({
             situacao: disciplina.situacao
           })
 
-
-
-
           if (this.verificaReprovacaoPorFalta(disciplina.situacao)) {
             qr++
           }
@@ -253,13 +222,9 @@ var app = new Vue({
             cha += Number(disciplina.cargaHoraria)
           }
 
-
-
           disciplinaIndex++
         });
       });
-
-
 
       qr = somaCHC > 0 ? qr : NaN
 
@@ -277,7 +242,8 @@ var app = new Vue({
         qr: this.formatarNumero(qr, 0),
         chc: this.formatarNumero(chc, 0),
         cha: this.formatarNumero(cha, 0),
-        chi: this.formatarNumero(chi, 0), cht: this.formatarNumero(cht, 0),
+        chi: this.formatarNumero(chi, 0), 
+        cht: this.formatarNumero(cht, 0),
         ta: this.formatarNumero(ta, 2),
         ti: this.formatarNumero(ti, 2),
         ip: this.formatarNumero(ip, 2)
@@ -285,7 +251,6 @@ var app = new Vue({
 
       console.log("Índices calculados!!!")
       console.log(this.calc)
-
 
       this.etapa = 4
 
