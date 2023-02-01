@@ -36,8 +36,9 @@ var app = new Vue({
       */
       disciplinasFormatado: [],
       calc: null,
-      paragrafosAplicados: []
-    }
+      paragrafosAplicados: [],
+      ultimoId : 0
+    }  
   },
 
   mounted() {
@@ -70,11 +71,10 @@ var app = new Vue({
       this.inputCHT = undefined
       this.inputCHI = undefined
       this.periodos = []
-      this.inputMatricula = undefined
     },
     adicionar(itemPeriodo) {
       itemPeriodo.disciplinas.push({
-        disciplina: "",
+        selecionado: false,
         cargaHoraria: "",
         situacao: null
       })
@@ -84,9 +84,9 @@ var app = new Vue({
         let indexUltimaDisciplina = itemPeriodo.disciplinas.length-1
 
         if(indexPeriodo===0){
-          this.$refs.inputDisciplinas_0_Ref[indexUltimaDisciplina].focus()
+          this.$refs.inputCHDisciplinas_0_Ref[indexUltimaDisciplina].focus()
         }else if(indexPeriodo===1){
-          this.$refs.inputDisciplinas_1_Ref[indexUltimaDisciplina].focus()
+          this.$refs.inputCHDisciplinas_1_Ref[indexUltimaDisciplina].focus()
         }
       });
     },
@@ -147,7 +147,7 @@ var app = new Vue({
           descricao: "",
           disciplinas: [
             {
-              disciplina: "",
+              //disciplina: "",
               cargaHoraria: "",
               situacao: null
             }]
@@ -171,7 +171,7 @@ var app = new Vue({
 
       this.etapa = 3
       this.$nextTick(()=>{
-        this.$refs.inputMatriculaRef.focus();
+        this.$refs.inputCHTRef.focus();
       });
       
     },
@@ -191,6 +191,8 @@ var app = new Vue({
       this.disciplinasFormatado = []
       let disciplinaIndex = 0
 
+      let indexGeral = 0
+
       this.periodos.forEach(periodo => {
 
         disciplinaIndex = 0
@@ -203,9 +205,11 @@ var app = new Vue({
             })
           }
 
+          indexGeral++
+          
           this.disciplinasFormatado.push({
             anoPeriodo: null,
-            disciplina: disciplina.disciplina,
+            index: indexGeral,
             cargaHoraria: disciplina.cargaHoraria,
             situacao: disciplina.situacao
           })
@@ -259,7 +263,6 @@ var app = new Vue({
 
     //TODO: Apagar na versão final
     preencherUmPeriodosDeTeste() {
-      this.inputMatricula = "201850000"
       this.anoPeriodoAtual = "2022/2"
       this.qtdPeriodos = 1
       this.inputCHT = 3200
@@ -269,12 +272,12 @@ var app = new Vue({
           descricao: "2022/2",
           disciplinas: [
             {
-              disciplina: "Disciplina 001",
+              //disciplina: "Disciplina 001",
               cargaHoraria: "64",
               situacao: "AP"
             },
             {
-              disciplina: "Disciplina 002",
+              //disciplina: "Disciplina 002",
               cargaHoraria: "64",
               situacao: "AP"
             }
@@ -288,7 +291,6 @@ var app = new Vue({
 
     //TODO: Apagar na versão final
     preencherDoisPeriodosDeTeste() {
-      this.inputMatricula = "201800001"
       this.anoPeriodoAtual = "2023/1"
       this.qtdPeriodos = 2
       this.inputCHT = 2988
@@ -298,22 +300,22 @@ var app = new Vue({
           descricao: "2022/1",
           disciplinas: [
             {
-              disciplina: "disciplina 1",
+              //disciplina: "disciplina 1",
               cargaHoraria: "64",
               situacao: "AP"
             },
             {
-              disciplina: "disciplina 2",
+              //disciplina: "disciplina 2",
               cargaHoraria: "64",
               situacao: "AP"
             },
             {
-              disciplina: "disciplina 3",
+              //disciplina: "disciplina 3",
               cargaHoraria: "64",
               situacao: "AP"
             },
             {
-              disciplina: "disciplina 4",
+              //disciplina: "disciplina 4",
               cargaHoraria: "64",
               situacao: "AP"
             }
@@ -323,12 +325,12 @@ var app = new Vue({
           descricao: "2022/2",
           disciplinas: [
             {
-              disciplina: "disciplina 5",
+              //disciplina: "disciplina 5",
               cargaHoraria: "64",
               situacao: "AP"
             },
             {
-              disciplina: "disciplina 6",
+              //disciplina: "disciplina 6",
               cargaHoraria: "64",
               situacao: "AP"
             }
@@ -337,6 +339,17 @@ var app = new Vue({
       ]
 
       this.etapa = 3
+    },
+    getProximoId(){
+      this.ultimoId++
+      return this.ultimoId
+    },
+    getNumeroLinha(indexPeriodo, indexDisciplina){
+      if(indexPeriodo===0){
+        return indexDisciplina + 1
+      }else if(indexPeriodo ===1){
+        return this.periodos[0].disciplinas.length+ (indexDisciplina +1)
+      }
     }
 
   },
@@ -350,12 +363,12 @@ var app = new Vue({
 
     <template v-if="etapa===1">
       <h4>Informe a quantidade de períodos</h4>
-      <button v-on:click="definirPeriodos(1)">1</button>
-      <br /><br />
-      <button v-on:click="definirPeriodos(2)">2</button>
+      <button v-on:click="definirPeriodos(1)" style="width: 4rem; height: 4rem">1</button>
+      &nbsp;
+      <button v-on:click="definirPeriodos(2)" style="width: 4rem; height: 4rem">2</button>
 
       <!--TODO: Remover este botão na versão final-->
-      <br /><br />
+      <br /><br /><br /><br />
       <button v-on:click="preencherUmPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 1 períodos de teste</button>      
       <br /><br />
       <button v-on:click="preencherDoisPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 2 períodos de teste</button>
@@ -372,8 +385,7 @@ var app = new Vue({
       <br />
 
       <button v-for="(item, index) of anosPeriodosSelecionaveis"
-        v-on:click="selecionarAnoPeriodoAtual(item)">{{item}}</button>
-
+        v-on:click="selecionarAnoPeriodoAtual(item)" style="width: 6rem; height: 2rem">{{item}}</button>
 
 
     </template>
@@ -381,82 +393,67 @@ var app = new Vue({
     <br /><br /><br />
 
     <template v-if="etapa===3">
-<form @submit.prevent="calcular">
-      <label for="matricula">Matrícula (opcional)</label>
-      <input id="matricula" type="number" ref="inputMatriculaRef" v-model="inputMatricula"></input>
-      <br />
+      <form @submit.prevent="calcular">
+        <label for="cht">CHT*</label>
+        <input id="cht" type="number" ref="inputCHTRef" v-model.number="inputCHT" min="1" required></input>
+        <br />
 
-      <label for="cht">CHT*</label>
-      <input id="cht" type="number" v-model.number="inputCHT" min="1" required></input>
-      <br />
+        <label for="chi">CHI*</label>
+        <input id="chi" type="number" v-model.number="inputCHI" min="1" required></input>
+        <br /><br />
 
-      <label for="chi">CHI*</label>
-      <input id="chi" type="number" v-model.number="inputCHI" min="1" required></input>
-      <br /><br />
+        <div style="border:1; border" v-for="(itemPeriodo, indexPeriodo) of periodos">
+          <h4>{{itemPeriodo.descricao}}</h4>
 
-      <div style="border:1; border" v-for="(itemPeriodo, indexPeriodo) of periodos">
-        <h4>{{itemPeriodo.descricao}}</h4>
+          <table>
+            <thead>
+              <th>#</th>
+              <th>*Carga horária</th>
+              <th>*Situação</th>
+            </thead>
+            <tbody>
+              <tr v-for="(item, indexDisciplina) of itemPeriodo.disciplinas">
+                <td>
+                  <input type="checkbox" />
+                </td>
+                <td>
+                  {{getNumeroLinha(indexPeriodo, indexDisciplina)}}
+                </td>
+                <td>
+                  <input type="number" v-model.number="item.cargaHoraria" min="1" max="9999" :ref="'inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
+                </td>
+                <td>
+                  <select v-model="item.situacao" required>
 
-        
+                    <option value="AP">AP - Aprovado</option>
+                    <option value="RM">RM - Reprov. Média</option>
+                    <option value="RF">RF - Reprov. Falta</option>
+                    <option value="RMF">RMF - Reprov. Média e Falta</option>
+                  </select>
+                </td>
+                <td>
+                  <button type="button" @click.prevent.stop="excluir(itemPeriodo, item, $event)" :disabled="itemPeriodo.disciplinas.length<=1"><i
+                      class="fa fa-trash" /></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" @click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
 
+        </div>
 
-
-
-        <table>
-          <thead>
-            <th>Disciplina</th>
-            <th>*Carga horária</th>
-            <th>*Situação</th>
-          </thead>
-          <tbody>
-            <tr v-for="(item, indexDisciplina) of itemPeriodo.disciplinas">
-              <td>
-                <input type="text" v-model.trim="item.disciplina" :ref="'inputDisciplinas_'+indexPeriodo+'_Ref'"></input>
-              </td>
-              <td>
-                <input type="number" v-model.number="item.cargaHoraria" min="1" max="9999" required></input>
-              </td>
-              <td>
-                <select v-model="item.situacao" required>
-
-                  <option value="AP">AP - Aprovado</option>
-                  <option value="RM">RM - Reprov. Média</option>
-                  <option value="RF">RF - Reprov. Falta</option>
-                  <option value="RMF">RMF - Reprov. Média e Falta</option>
-                </select>
-              </td>
-              <td>
-                <button type="button" @click.prevent.stop="excluir(itemPeriodo, item, $event)" :disabled="itemPeriodo.disciplinas.length<=1"><i
-                    class="fa fa-trash" /></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button type="button" @click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
-
-      </div>
-
-      <br/><br/><br/>
-      <button type="submit" ><i
-                    class="fa fa-calculator" />Calcular</button>
-</form>                    
+        <br/><br/><br/>
+        <button type="submit" ><i
+                      class="fa fa-calculator" />Calcular</button>
+      </form>                    
     </template>
 
     <template v-if="etapa===4">
-
-    <table>
-    <tr>
-      <th>Matrícula:</th>
-      <td>{{inputMatricula?inputMatricula:'-'}}</td>
-    </tr>
-    </table>
-    <br/><br/>
-
       <div style="border:1; border" >
         
         <table>
           <thead>
-            <th>Disciplina</th>
+            <th>#</th>
             <th>Carga horária</th>
             <th>Situação</th>
           </thead>
@@ -469,7 +466,7 @@ var app = new Vue({
 
             <template v-if="item.anoPeriodo===null">
                 <td>
-                    {{item.disciplina?item.disciplina:'-'}}
+                    {{item.index}}
                 </td>
                 <td>
                     {{item.cargaHoraria}}
