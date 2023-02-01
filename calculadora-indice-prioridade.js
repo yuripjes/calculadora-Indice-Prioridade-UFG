@@ -90,6 +90,9 @@ var app = new Vue({
         }
       });
     },
+    duplicar(itemPeriodo, obj, $event) {
+      itemPeriodo.disciplinas.push({...obj})
+    },
     excluir(itemPeriodo, obj, $event) {
       let index = itemPeriodo.disciplinas.indexOf(obj)
       itemPeriodo.disciplinas.splice(index, 1);
@@ -412,18 +415,15 @@ var app = new Vue({
               <th>*Situação</th>
             </thead>
             <tbody>
-              <tr v-for="(item, indexDisciplina) of itemPeriodo.disciplinas">
-                <td>
-                  <input type="checkbox" />
-                </td>
+              <tr v-for="(itemDisciplina, indexDisciplina) of itemPeriodo.disciplinas">
                 <td>
                   {{getNumeroLinha(indexPeriodo, indexDisciplina)}}
                 </td>
                 <td>
-                  <input type="number" v-model.number="item.cargaHoraria" min="1" max="9999" :ref="'inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
+                  <input type="number" v-model.number="itemDisciplina.cargaHoraria" min="1" max="9999" :ref="'inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
                 </td>
                 <td>
-                  <select v-model="item.situacao" required>
+                  <select v-model="itemDisciplina.situacao" required>
 
                     <option value="AP">AP - Aprovado</option>
                     <option value="RM">RM - Reprov. Média</option>
@@ -432,7 +432,11 @@ var app = new Vue({
                   </select>
                 </td>
                 <td>
-                  <button type="button" @click.prevent.stop="excluir(itemPeriodo, item, $event)" :disabled="itemPeriodo.disciplinas.length<=1"><i
+                  <button type="button" @click.prevent.stop="duplicar(itemPeriodo, itemDisciplina, $event)" :disabled="!(itemDisciplina.cargaHoraria > 0 && itemDisciplina.situacao)"><i
+                      class="fa fa-copy" /></button>
+                </td>                
+                <td>
+                  <button type="button" @click.prevent.stop="excluir(itemPeriodo, itemDisciplina, $event)" :disabled="itemPeriodo.disciplinas.length<=1"><i
                       class="fa fa-trash" /></button>
                 </td>
               </tr>
@@ -489,8 +493,8 @@ var app = new Vue({
       <br />
       <br />
 
-      <div>
-        <h4>Regras aplicadas (painel expansível?)</h4>
+      <div v-show="paragrafosAplicados.length > 0">
+        <h4>Regras aplicadas (painel expansível? Painel tipo warning?)</h4>
         <ul>
           <li v-for="(regra, index) of paragrafosAplicados">
           {{regra}}
