@@ -357,213 +357,206 @@ var app = new Vue({
 
   },
   template: `
-    <div>
+  <div>
 
-    <button v-on:click="reiniciarCalculo()" v-if="etapa>1"><i class="fa fa-undo" /> Reiniciar cálculo</button>
+  <button v-on:click="reiniciarCalculo()" v-if="etapa>1"><i class="fa fa-undo" /> Reiniciar cálculo</button>
+  <br /><br />
+
+
+
+  <template v-if="etapa===1">
+    <h4>Informe a quantidade de períodos</h4>
+    <button v-on:click="definirPeriodos(1)" style="width: 4rem; height: 4rem">1</button>
+    &nbsp;
+    <button v-on:click="definirPeriodos(2)" style="width: 4rem; height: 4rem">2</button>
+
+    <!--TODO: Remover este botão na versão final-->
+    <br /><br /><br /><br />
+    <button v-on:click="preencherUmPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 1 períodos de
+      teste</button>
+    <br /><br />
+    <button v-on:click="preencherDoisPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 2 períodos de
+      teste</button>
     <br /><br />
 
 
-
-    <template v-if="etapa===1">
-      <h4>Informe a quantidade de períodos</h4>
-      <button v-on:click="definirPeriodos(1)" style="width: 4rem; height: 4rem">1</button>
-      &nbsp;
-      <button v-on:click="definirPeriodos(2)" style="width: 4rem; height: 4rem">2</button>
-
-      <!--TODO: Remover este botão na versão final-->
-      <br /><br /><br /><br />
-      <button v-on:click="preencherUmPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 1 períodos de teste</button>      
-      <br /><br />
-      <button v-on:click="preencherDoisPeriodosDeTeste()"><i class="fa fa-exclamation" /> Preencher 2 períodos de teste</button>
-      <br /><br />
-
-
-    </template>
+  </template>
 
 
 
-    <template v-if="etapa===2">
+  <template v-if="etapa===2">
 
-      <label>Informe o Ano/Período atual</label>
+    <label>Informe o Ano/Período atual</label>
+    <br />
+
+    <div style="display: flex; flex-direction: column;">
+      <button v-for="(item, index) of anosPeriodosSelecionaveis" v-on:click="selecionarAnoPeriodoAtual(item)"
+        style="width: 6rem; height: 2rem;">{{item}}</button>
+    </div>
+
+  </template>
+
+  <br /><br /><br />
+
+  <template v-if="etapa===3">
+    <form @submit.prevent="calcular">
+      <label for="cht">CHT*</label>
+      <input id="cht" type="number" ref="inputCHTRef" v-model.number="inputCHT" min="1" required></input>
       <br />
 
-      <button v-for="(item, index) of anosPeriodosSelecionaveis"
-        v-on:click="selecionarAnoPeriodoAtual(item)" style="width: 6rem; height: 2rem">{{item}}</button>
+      <label for="chi">CHI*</label>
+      <input id="chi" type="number" v-model.number="inputCHI" min="1" required></input>
+      <br /><br />
 
+      <div style="border:1; border" v-for="(itemPeriodo, indexPeriodo) of periodos">
+        <h4>{{itemPeriodo.descricao}}</h4>
 
-    </template>
-
-    <br /><br /><br />
-
-    <template v-if="etapa===3">
-      <form @submit.prevent="calcular">
-        <label for="cht">CHT*</label>
-        <input id="cht" type="number" ref="inputCHTRef" v-model.number="inputCHT" min="1" required></input>
-        <br />
-
-        <label for="chi">CHI*</label>
-        <input id="chi" type="number" v-model.number="inputCHI" min="1" required></input>
-        <br /><br />
-
-        <div style="border:1; border" v-for="(itemPeriodo, indexPeriodo) of periodos">
-          <h4>{{itemPeriodo.descricao}}</h4>
-
-          <table>
-            <thead>
-              <th>#</th>
-              <th>*Carga horária</th>
-              <th>*Situação</th>
-            </thead>
-            <tbody>
-              <tr v-for="(itemDisciplina, indexDisciplina) of itemPeriodo.disciplinas">
-                <td>
-                  {{getNumeroLinha(indexPeriodo, indexDisciplina)}}
-                </td>
-                <td>
-                  <input type="number" v-model.number="itemDisciplina.cargaHoraria" min="1" max="9999" :ref="'inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
-                </td>
-                <td>
-                  <select v-model="itemDisciplina.situacao" required>
-
-                    <option value="AP">AP - Aprovado</option>
-                    <option value="RM">RM - Reprov. Média</option>
-                    <option value="RF">RF - Reprov. Falta</option>
-                    <option value="RMF">RMF - Reprov. Média e Falta</option>
-                  </select>
-                </td>
-                <td>
-                  <button type="button" @click.prevent.stop="duplicar(itemPeriodo, itemDisciplina, $event)" :disabled="!(itemDisciplina.cargaHoraria > 0 && itemDisciplina.situacao)"><i
-                      class="fa fa-copy" /></button>
-                </td>                
-                <td>
-                  <button type="button" @click.prevent.stop="excluir(itemPeriodo, itemDisciplina, $event)" :disabled="itemPeriodo.disciplinas.length<=1"><i
-                      class="fa fa-trash" /></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="button" @click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
-
+        <div style="display: flex; flex-direction: row;">
+          <div>#</div>
+          <div>*Carga horária</div>
+          <div>*Situação</div>
         </div>
 
-        <br/><br/><br/>
-        <button type="submit" ><i
-                      class="fa fa-calculator" />Calcular</button>
-      </form>                    
-    </template>
+        <div v-for="(itemDisciplina, indexDisciplina) of itemPeriodo.disciplinas"
+          style="display: flex; flex-direction: row;">
+          <div>
+            {{getNumeroLinha(indexPeriodo, indexDisciplina)}}
+          </div>
+          <div>
+            <input type="number" v-model.number="itemDisciplina.cargaHoraria" min="1" max="9999"
+              :ref="'inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
+          </div>
+          <div>
+            <select v-model="itemDisciplina.situacao" required>
+              <option value="AP">AP - Aprovado</option>
+              <option value="RM">RM - Reprov. Média</option>
+              <option value="RF">RF - Reprov. Falta</option>
+              <option value="RMF">RMF - Reprov. Média e Falta</option>
+            </select>
+          </div>
+          <div>
+            <button type="button" @click.prevent.stop="duplicar(itemPeriodo, itemDisciplina, $event)"
+              :disabled="!(itemDisciplina.cargaHoraria > 0 && itemDisciplina.situacao)"><i
+                class="fa fa-copy" /></button>
+          </div>
+          <div>
+            <button type="button" @click.prevent.stop="excluir(itemPeriodo, itemDisciplina, $event)"
+              :disabled="itemPeriodo.disciplinas.length<=1"><i class="fa fa-trash" /></button>
+          </div>
+        </div>
 
-    <template v-if="etapa===4">
-      <div style="border:1; border" >
-        
-        <table>
-          <thead>
-            <th>#</th>
-            <th>Carga horária</th>
-            <th>Situação</th>
-          </thead>
-          <tbody>
+        <button type="button" @click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
 
-
-
-            <tr v-for="(item, indexDisciplina) of disciplinasFormatado">
-
-
-            <template v-if="item.anoPeriodo===null">
-                <td>
-                    {{item.index}}
-                </td>
-                <td>
-                    {{item.cargaHoraria}}
-                </td>
-                <td>
-                    {{item.situacao}}
-                </td>
-            </template>
-
-            <template v-else>
-                <td colspan="4" style="background-color: #c5ebff;">Período {{item.anoPeriodo}}</td>
-            </template>            
-
-            </tr>
-
-
-          </tbody>
-        </table>
       </div>
-      <br />
-      <br />
 
-      <div v-show="paragrafosAplicados.length > 0">
-        <h4>Regras aplicadas (painel expansível? Painel tipo warning?)</h4>
-        <ul>
-          <li v-for="(regra, index) of paragrafosAplicados">
+      <br /><br /><br />
+      <button type="submit"><i class="fa fa-calculator" />Calcular</button>
+    </form>
+  </template>
+
+  <template v-if="etapa===4">
+    <div style="border:1; border">
+
+      <div style="display: flex; flex-direction: row;">
+        <div>#</div>
+        <div>Carga horária</div>
+        <div>Situação</div>
+      </div>
+
+
+
+      <div v-for="(item, indexDisciplina) of disciplinasFormatado" style="display: flex; flex-direction: row;">
+
+        <template v-if="item.anoPeriodo===null">
+          <div>
+            {{item.index}}
+          </div>
+          <div>
+            {{item.cargaHoraria}}
+          </div>
+          <div>
+            {{item.situacao}}
+          </div>
+        </template>
+
+        <template v-else>
+          <div style="background-color: #c5ebff;">Período {{item.anoPeriodo}}</div>
+        </template>
+
+      </div>
+
+    </div>
+    <br />
+    <br />
+
+    <div v-show="paragrafosAplicados.length > 0">
+      <h4>Regras aplicadas (painel expansível? Painel tipo warning?)</h4>
+      <ul>
+        <li v-for="(regra, index) of paragrafosAplicados">
           {{regra}}
-          </li>
-        </ul>
-      </div>
-      
-      <div>
-        <h4>Cálculo do IP</h4>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Cálculo do IP</h4>
 
 
-        <table>
-          <tr>
-            <th>QR</th>
-            <td>{{calc.qr}}</td>
-          </tr>
-          <tr>
-            <th>CHA</th>
-            <td>{{calc.cha}}</td>
-          </tr>
-          <tr>
-            <th>CHC</th>
-            <td>{{calc.chc}}</td>
-          </tr>
-          <tr>
-            <th>CHI</th>
-            <td>{{calc.chi}}</td>
-          </tr>
-          <tr>
-            <th>CHT</th>
-            <td>{{calc.cht}}</td>
-          </tr>
-          <tr>
-            <th>TA</th>
-            <td>{{calc.ta}}</td>
-          </tr>
-          <tr>
-            <th>Ti</th>
-            <td>{{calc.ti}}</td>
-          </tr>
-          <tr>
-            <th>IP</th>
-            <td>{{calc.ip}}</td>
-          </tr>
+      <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; flex-direction: row;">
+          <div>QR</div>
+          <div>{{calc.qr}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>CHA</div>
+          <div>{{calc.cha}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>CHC</div>
+          <div>{{calc.chc}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>CHI</div>
+          <div>{{calc.chi}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>CHT</div>
+          <div>{{calc.cht}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>TA</div>
+          <div>{{calc.ta}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>Ti</div>
+          <div>{{calc.ti}}</div>
+        </div>
+        <div style="display: flex; flex-direction: row;">
+          <div>IP</div>
+          <div>{{calc.ip}}</div>
+        </div>
         </table>
 
       </div>
-      <button v-on:click="()=> etapa=3"><i
-      class="fa fa-edit" />Editar</button>
+      <button v-on:click="()=> etapa=3"><i class="fa fa-edit" />Editar</button>
 
-    </template>
-
+  </template>
 
 
 
 
-    <hr /><br /><br /><br /><br /><br /><br /><br />
-    <h5>debug</h5>
-    <pre>paragrafosAplicados: {{paragrafosAplicados}}</pre>
-    <pre>anoPeriodoAtual: {{anoPeriodoAtual}}</pre>
-    <pre>qtdPeriodos: {{qtdPeriodos}}</pre>
-    <pre>periodos: {{periodos}}</pre>
-    <pre>disciplinasFormatado: {{disciplinasFormatado}}</pre>
-    <pre>calc: {{calc}}</pre>
 
-     <pre>anosPeriodosSelecionaveis: {{anosPeriodosSelecionaveis}}</pre>
-      <pre>anosPeriodosDisponiveis: {{anosPeriodosDisponiveis}}</pre>
-  </div>
+  <hr /><br /><br /><br /><br /><br /><br /><br />
+  <h5>debug</h5>
+  <pre>paragrafosAplicados: {{paragrafosAplicados}}</pre>
+  <pre>anoPeriodoAtual: {{anoPeriodoAtual}}</pre>
+  <pre>qtdPeriodos: {{qtdPeriodos}}</pre>
+  <pre>periodos: {{periodos}}</pre>
+  <pre>disciplinasFormatado: {{disciplinasFormatado}}</pre>
+  <pre>calc: {{calc}}</pre>
 
-    `,
+  <pre>anosPeriodosSelecionaveis: {{anosPeriodosSelecionaveis}}</pre>
+  <pre>anosPeriodosDisponiveis: {{anosPeriodosDisponiveis}}</pre>
+</div>`,
 
 }).$mount('#app-calc-ip');

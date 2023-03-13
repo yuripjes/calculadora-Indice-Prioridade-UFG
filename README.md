@@ -13,7 +13,7 @@ Para subir este app no Weby precisamos seguir os passos:
 
 - Subir num único arquivo html o script do app juntamente com a <div>
     - Atualizar este arquivo a cada atualização no código
-    - Faça uma cópia do arquivo "exemplo-importar-html-weby.html"
+    - Faça uma cópia do arquivo "html-calculadora-indice-prioridade.html"
     - Copie o conteudo do arquivo "calculdadora-indice-prioridade.js" para o arquivo copiado anteriormente na área indicada dentro da tag <script>
     - Salve e faça upload
 - Adicionar o javascript para importar o código e o Vue.js somente quando necessário
