@@ -270,6 +270,14 @@ var app = new Vue({
       <button v-on:click="reiniciarCalculo()" v-if="etapa>1"><i class="fa fa-undo" /> Reiniciar cálculo</button>
 
       <template v-if="etapa===1">
+        <div class="msg-ip">
+          <span class="t-msg-ip">Sugestões</span>
+          <ul>
+            <li>Antes de prosseguir, utilize o SIGAA para emitir seu extrato acadêmico e encontrar todas as informações necessárias (Menu Ensino > Emitir Extrato Acadêmico).</li>
+            <li>Leia o Art. 54 do <a href="https://sistemas.ufg.br/consultas_publicas/resolucoes/arquivos/Resolucao_CEPEC_2022_1791.pdf" target="blank">RGCG</a> para entender como o IP é calculado.</li>
+          </ul>
+        </div>
+        
         <h2>Informe a quantidade de períodos</h2>
         <button v-on:click="definirPeriodos(1)">1</button>
         <button v-on:click="definirPeriodos(2)">2</button>
