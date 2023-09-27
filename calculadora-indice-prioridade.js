@@ -9,7 +9,6 @@ const valorMaximoTA=1
 const valorMaximoIP=110
 
 const truncarDuasCasasDecimais = (valor) => {
-console.log(valor)
   return (parseInt( valor * 100 ) / 100)
   /*return Number(
     valor.toString().match(/^\d+(?:\.\d{0,2})?/)
@@ -51,10 +50,7 @@ var app = new Vue({
     }
 
     this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(4, 8)]
-    console.log("anosPeriodosDisponiveis: ")
-    console.log(this.anosPeriodosDisponiveis)
 
-    console.log("FIM Mounted()\n-----------------")
   },
   methods: {
     reiniciarCalculo() {
@@ -122,18 +118,15 @@ var app = new Vue({
       }
     },
     calcularTaxaAprovacao(cha, chc) {
-      console.log("TA: ")
       let ta = truncarDuasCasasDecimais(cha / chc)
       
       return ta > 1 ? valorMaximoTA : ta
     },
     calcularTaxaIntegralizacao(chi, cht) {
-      console.log("TI: ")
       let ti = truncarDuasCasasDecimais(chi / cht)
       return ti > 1 ? valorMaximoTI : ti
     },
     calcularIndicePrioridade(ta, ti, qr) {
-      console.log("IP: ")
       let ip = truncarDuasCasasDecimais((100 * ta) + (10 * ti) - (3 * qr))
       return ip > 110 ? valorMaximoIP : ip
     },
@@ -242,9 +235,6 @@ var app = new Vue({
         ip: this.formatarNumero(ip, 2)
       }
 
-      console.log("Índices calculados!!!")
-      console.log(this.calc)
-
       this.etapa = 4
 
     },
@@ -278,7 +268,7 @@ var app = new Vue({
           </ul>
         </div>
         
-        <h2>Informe a quantidade de períodos</h2>
+        <h2>Informe a quantidade de semestres a serem considerados no cálculo</h2>
         <button v-on:click="definirPeriodos(1)">1</button>
         <button v-on:click="definirPeriodos(2)">2</button>
       </template>
