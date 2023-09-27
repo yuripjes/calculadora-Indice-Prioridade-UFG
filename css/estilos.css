@@ -1,0 +1,164 @@
+  /*  #prioridade button {
+  background-color: var(--main-color);
+  border-radius: 20px;
+  display: inline-block;
+  padding: 10px 20px;
+  position: relative;
+  text-align: center;
+  transition-delay: 0s;
+  transition-duration: 0.2s;
+  transition-property: all;
+  transition-timing-function: ease;
+  color: #FFF !important;
+  text-decoration: none;
+}*/
+:root{
+    --size-input1: 300px;
+    --size-input2: 100px;
+    --size-label1: 50px;
+    --esp1: 10px 5px;
+  }
+  #prioridade .content-calc-ip {
+    background-color: #e3d6d6;
+    padding: 20px 20px 50px 20px;
+    min-width: 755px;
+    border-radius: 5px;
+    margin-bottom: 50px;
+  }
+  #prioridade .h-select {
+    height: 50px;
+    padding: 10px;
+  }
+  #prioridade .l-disc-ip {
+    display: flex;
+  }
+  #prioridade .semestre-ip {
+    margin: 10px 0 20px 0;
+    border-radius: 5px;
+    padding: 1px 10px 25px 20px;
+    background-color: #ece5e5;
+    min-width: 715px;
+  }
+  #prioridade .size-label1 {
+    width: var(--size-label1);
+    display: inline-block;
+  }
+  #prioridade .num-disc-ip {
+    width: var(--size-label1);
+    display: inline-block;
+    text-align: center;
+    background-color: #eee;
+    margin: var(--esp1);
+    padding: 10px;
+  }
+  #prioridade .ch-disc-ip {
+    width: var(--size-input2);
+    display: inline-block;
+    text-align: center;
+    background-color: #eee;
+    margin: var(--esp1);
+  }
+  #prioridade .sit-disc-ip {
+    width: var(--size-input1);
+    display: inline-block;
+    text-align: center;
+    margin: var(--esp1);
+    background-color: #eee;
+  }
+  #prioridade .act-disc-ip {
+    width: 175px;
+    display: inline-block;
+    text-align: center;
+    margin: var(--esp1);
+    background-color: #eee;
+  }
+  #prioridade .size-input1 {
+    width: var(--size-input1);
+    margin: var(--esp1);
+  }
+  #prioridade button:hover {
+    background-color: var(--sub-color);
+    text-decoration: none !important;
+  }
+  #prioridade button {
+    border: var(--main-color);
+    border-radius: 24px;
+    background-color: var(--main-color);
+    font-family: Lato;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--white);
+    padding: 14px 30px 15px;
+    margin-right: 16px;
+    margin-bottom: 5px;
+    transition: .2s;
+  }
+  #prioridade .formula-ip {
+    background-color: var(--bg);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    min-width: 900px;
+  }
+  #prioridade .item-formula-ip {
+    background-color: #E3D6D6;
+    margin: 4px;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 10px;
+    color: var(--sub-color);
+    border-radius: 5px;
+  }
+  #prioridade .subitem-formula-ip {
+    background-color: #c9b9b9;
+    display: flex;
+    margin: 18px 5px 5px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  #prioridade .subitem-formula-ip::before {
+    content: "^";
+    font-size: 2em;
+    font-weight: 600;
+    position: relative;
+    top: -36px;
+    left: calc(50% + 16px);
+    color: #c9b9b9;
+    margin-left: -26px;
+  }
+  #prioridade .item-sub-formula-ip {
+    /*background-color: #5c3333;*/
+    margin: 2px;
+  }
+  #prioridade .l-form-ip {
+    font-weight: 600;
+    color: var(--dark-gray);
+  }
+  #prioridade .n-form-ip {
+    font-weight: 600;
+    font-size: 0.9em;
+  }
+  #prioridade .t-cor {
+    color: rgba(186, 24, 79, 0.6);
+  }
+  #prioridade .t-size {
+    font-size: 1.3em;
+  }
+  #prioridade .msg-ip {
+    font-size: 0.9em;
+    background-color: rgba(255, 210, 112, 0.5);
+    border-radius: 10px;
+    padding: 20px 20px 5px;
+    margin: 30px 0;
+    border: 1px var(--matiz2-4) solid;
+  }
+  #prioridade .t-msg-ip {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--matiz2-1);
+  }
