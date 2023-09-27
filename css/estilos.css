@@ -17,6 +17,15 @@
     --size-input2: 100px;
     --size-label1: 50px;
     --esp1: 10px 5px;
+    
+    --main-color: #e91e63;
+    --sub-color: #ba184f;
+    --bg: #f2f2f2;
+    --white: #ffffff;
+    --light-grey: #eeeeee;
+    --matiz2-1: #822100;
+    --matiz2-4: #FF9773;
+    
   }
   #prioridade .content-calc-ip {
     background-color: #e3d6d6;
