@@ -17,7 +17,8 @@ const truncarDuasCasasDecimais = (valor) => {
 
 var app = new Vue({
   components: {
-    'Chips': chips
+    'Chips': chips,
+    'SelectButton': selectbutton
   },
   data() {
     return {
@@ -37,7 +38,10 @@ var app = new Vue({
 
       calc: null,
       paragrafosAplicados: [],
-      ultimoId : 0
+      ultimoId : 0,
+
+      //Novos objetos
+      situacaoOptions: ['AP', 'RM', 'RF', 'RMF'],
     }  
   },
 
@@ -86,6 +90,14 @@ var app = new Vue({
           this.$refs.inputCHDisciplinas_1_Ref[indexUltimaDisciplina].focus()
         }
       });
+
+      //Nova feature
+      itemPeriodo.novoItemDisciplina = {
+        selecionado: false,
+        cargaHoraria: "",
+        situacao: null
+      }
+
     },
     duplicar(itemPeriodo, obj, $event) {
       itemPeriodo.disciplinas.push({...obj})
@@ -147,7 +159,14 @@ var app = new Vue({
               //disciplina: "",
               cargaHoraria: "",
               situacao: null
-            }]
+            }],
+
+          //nova Feature
+          novoItemDisciplina: {
+            selecionado: false,
+            cargaHoraria: "",
+            situacao: null
+          }
         }
         this.periodos.push(periodo)
       }
@@ -306,6 +325,31 @@ var app = new Vue({
 
           <div class="semestre-ip" v-for="(itemPeriodo, indexPeriodo) of periodos">
             <h2>{{itemPeriodo.descricao}}</h2>
+
+
+            <div style="background: aqua; width: 100%; padding: 2rem; display: flex; flex-direction: row; gap: 10px; ">
+              <SelectButton v-model="itemPeriodo.novoItemDisciplina" :options="situacaoOptions" />
+
+              <div style=" display: flex; flex-direction: column; gap: 10px;">
+              
+                <div style=" display: flex; flex-direction: row; gap: 5px;">
+                  <button type="button">16</button>
+                  <button type="button">32</button>
+                  <button type="button">48</button>
+                  <button type="button">64</button>
+                  <button type="button">96</button>
+                  <button type="button">128</button>
+                </div>
+
+                <div>
+                  <input type="number" v-model.number="itemPeriodo.novoItemDisciplina.cargaHoraria" min="1" max="9999"
+                  :ref="'NOVO_inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
+                
+                  <button type="button"><i class="fa fa-plus" />Disciplina</button>
+                </div>
+              </div>
+            
+            </div>
 
             <div lass="disc-ip">
               <div class="l-disc-ip">
