@@ -16,8 +16,12 @@ const truncarDuasCasasDecimais = (valor) => {
 }
 
 var app = new Vue({
+  components: {
+    'Chips': chips
+  },
   data() {
     return {
+      value1: null,
       message: 'Row',
       etapa: 1,
       qtdPeriodos: 0,
@@ -256,6 +260,9 @@ var app = new Vue({
   template: `
   <div id="prioridade">
     <div class="content-calc-ip">
+
+
+    <Chips v-model="value1" />
 
       <button v-on:click="reiniciarCalculo()" v-if="etapa>1"><i class="fa fa-undo" /> Reiniciar cálculo</button>
 
