@@ -73,6 +73,8 @@ var app = new Vue({
       this.inputCHI = undefined
       this.periodos = []
     },
+    //TODO rever se precisará desse método considerando que iremos criar o objeto já preenchido.
+    /*
     adicionar(itemPeriodo) {
       itemPeriodo.disciplinas.push({
         selecionado: false,
@@ -98,7 +100,7 @@ var app = new Vue({
         situacao: null
       }
 
-    },
+    },*/
     duplicar(itemPeriodo, obj, $event) {
       itemPeriodo.disciplinas.push({...obj})
     },
@@ -154,12 +156,7 @@ var app = new Vue({
       for (let i = 0; i < qtd; i++) {
         let periodo = {
           descricao: "",
-          disciplinas: [
-            {
-              //disciplina: "",
-              cargaHoraria: "",
-              situacao: null
-            }],
+          disciplinas: [],
 
           //nova Feature
           novoItemDisciplina: {
@@ -273,6 +270,20 @@ var app = new Vue({
       }else if(indexPeriodo ===1){
         return this.periodos[0].disciplinas.length+ (indexDisciplina +1)
       }
+    },
+
+    definirCargaHoraria(novoItemDisciplina, cargaHoraria) {
+      novoItemDisciplina.cargaHoraria = Number(cargaHoraria)
+    },
+
+    //TODO renomear após os testes
+    adicionarDisciplina(itemPeriodo) {
+      let novaDisciplina = {...itemPeriodo.novoItemDisciplina}
+      itemPeriodo.disciplinas.push(novaDisciplina)
+
+      //Limpa o cadastro, mantendo apenas a situação selecionada
+      itemPeriodo.novoItemDisciplina.cargaHoraria = "";
+
     }
 
   },
@@ -327,25 +338,25 @@ var app = new Vue({
             <h2>{{itemPeriodo.descricao}}</h2>
 
 
-            <div style="background: aqua; width: 100%; padding: 2rem; display: flex; flex-direction: row; gap: 10px; ">
-              <SelectButton v-model="itemPeriodo.novoItemDisciplina" :options="situacaoOptions" />
+            <div style="background: #daffff; width: 100%; padding: 2rem; display: flex; flex-direction: row; gap: 10px; ">
+              <SelectButton v-model="itemPeriodo.novoItemDisciplina.situacao" :options="situacaoOptions" />
 
               <div style=" display: flex; flex-direction: column; gap: 10px;">
               
                 <div style=" display: flex; flex-direction: row; gap: 5px;">
-                  <button type="button">16</button>
-                  <button type="button">32</button>
-                  <button type="button">48</button>
-                  <button type="button">64</button>
-                  <button type="button">96</button>
-                  <button type="button">128</button>
+                  <button type="button" @click.prevent="definirCargaHoraria(itemPeriodo.novoItemDisciplina, 16)">16</button>
+                  <button type="button" @click.prevent="definirCargaHoraria(itemPeriodo.novoItemDisciplina, 32)">32</button>
+                  <button type="button" @click.prevent="definirCargaHoraria(itemPeriodo.novoItemDisciplina, 48)">48</button>
+                  <button type="button" @click.prevent="definirCargaHoraria(itemPeriodo.novoItemDisciplina, 64)">64</button>
+                  <button type="button" @click.prevent="definirCargaHoraria(itemPeriodo.novoItemDisciplina, 96)">96</button>
+                  <button type="button" @click.prevent="definirCargaHoraria(itemPeriodo.novoItemDisciplina, 128)">128</button>
                 </div>
 
                 <div>
                   <input type="number" v-model.number="itemPeriodo.novoItemDisciplina.cargaHoraria" min="1" max="9999"
                   :ref="'NOVO_inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
                 
-                  <button type="button"><i class="fa fa-plus" />Disciplina</button>
+                  <button type="button" @click.prevent="adicionarDisciplina(itemPeriodo)"><i class="fa fa-plus" />Disciplina</button>
                 </div>
               </div>
             
@@ -386,9 +397,11 @@ var app = new Vue({
               </div>
             </div>
 
+            <!--
             <div class="h-select">
               <button type="button" @click.prevent="adicionar(itemPeriodo)"><i class="fa fa-plus" /> disciplina</button>
             </div>
+            -->
           </div>
 
           <div class="h-select">
