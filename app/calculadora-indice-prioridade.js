@@ -177,10 +177,10 @@ var app = new Vue({
       // pegar duas posições atras no array que vai para o <select menu>
       let index = this.anosPeriodosDisponiveis.indexOf(anoPeriodo)
       if (this.periodos.length === 1) {
-        this.periodos[0].descricao = `${this.anosPeriodosDisponiveis[index - 1]}`
+        this.periodos[0].descricao = `Último período cursado`
       } else if (this.periodos.length === 2) {
-        this.periodos[0].descricao = `${this.anosPeriodosDisponiveis[index - 2]}`
-        this.periodos[1].descricao = `${this.anosPeriodosDisponiveis[index - 1]}`
+        this.periodos[0].descricao = `Penúltimo período cursado`
+        this.periodos[1].descricao = `Último período cursado`
       }
 
       this.etapa = 3
