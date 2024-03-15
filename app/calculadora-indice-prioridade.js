@@ -23,7 +23,7 @@ var app = new Vue({
   },
   data() {
     return {
-      value1: null,
+      //TODO verificar se ainda é utilzado
       message: 'Row',
       etapa: 1,
       qtdPeriodos: 0,
@@ -39,6 +39,7 @@ var app = new Vue({
 
       calc: null,
       paragrafosAplicados: [],
+      //TODO verificar se ainda é utilzado
       ultimoId : 0,
 
     

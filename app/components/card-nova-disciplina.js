@@ -53,13 +53,16 @@ Vue.component("card-nova-disciplina", {
     <div style="background: #daffff; width: 100%; padding: 2rem; display: flex; flex-direction: row; gap: 10px; ">
     
       <div style=" display: flex; flex-direction: column; gap: 10px;">
+          <label>Informe a carga horária do componente <b>cursado</b></label>
           <SelectButton v-model="chSelecionada" :options="chPredefinidaOptions" :disabled="desativarSeletorCH"/>
           <input type="number" v-model.number="itemPeriodo.novoItemDisciplina.cargaHoraria" :disabled="desativarInputCH" min="1" max="9999"
-          :ref="'NOVO_inputCHDisciplinas_'+indexPeriodo+'_Ref'" required></input>
+          :ref="'NOVO_inputCHDisciplinas_'+indexPeriodo+'_Ref'"></input>
       </div>
 
-      <SelectButton v-model="itemPeriodo.novoItemDisciplina.situacao" :options="situacaoOptions" />
-      
+      <div>
+          <label>Informe a situação do componente <b>cursado</b></label>
+          <SelectButton v-model="itemPeriodo.novoItemDisciplina.situacao" :options="situacaoOptions" />
+      </div>
 
       <button type="button" :disabled="desativarBotaoAdicionar" @click.prevent="adicionarDisciplina()"><i class="fa fa-plus" />Disciplina</button>
 
