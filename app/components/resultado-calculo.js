@@ -11,7 +11,7 @@ Vue.component("resultado-calculo", {
   },
   methods: {
     voltarEdicao() {
-      this.$emit("update:etapa", 3);
+      this.$emit("update:etapa", 2);
     }
   },
   template: `

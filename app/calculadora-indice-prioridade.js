@@ -29,11 +29,6 @@ var app = new Vue({
       message: 'Row',
       etapa: 1,
       qtdPeriodos: 0,
-      anoPeriodoAtual: null,
-
-      //TODO remover seleção de ano/período
-      anosPeriodosDisponiveis: [],//Para facilitar a obtenção dos anos-períodos anteriores ao que o usuário selecionar no combobox
-      anosPeriodosSelecionaveis: [], //vai para o combobox, tem os dois itens iniciais e finais removidos
 
       inputCHT: undefined,
       inputCHI: undefined,
@@ -51,29 +46,12 @@ var app = new Vue({
     }  
   },
 
-  mounted() {
-    const anoAtual = new Date().getFullYear();
-
-    this.anoPeriodoAtual = anoAtual + '/' + 1
-
-    for (let i = anoAtual - 3; i <= anoAtual + 2; i++) {
-      for (let j = 1; j <= 2; j++) {
-        this.anosPeriodosDisponiveis.push(i + '/' + j)
-
-      }
-    }
-
-    this.anosPeriodosSelecionaveis = [...this.anosPeriodosDisponiveis.slice(4, 8)]
-
-  },
+  mounted() {},
   methods: {
     reiniciarCalculo() {
       this.etapa = 1
 
       this.qtdPeriodos = 0
-      //////this.anoPeriodoAtual= null
-      //////anosPeriodosDisponiveis:[],
-      //////anosPeriodosSelecionaveis:[],
 
       this.inputCHT = undefined
       this.inputCHI = undefined
@@ -174,25 +152,19 @@ var app = new Vue({
         this.periodos.push(periodo)
       }
 
-      this.qtdPeriodos = qtd
-      this.etapa = 2
-    },
-
-    selecionarAnoPeriodoAtual(anoPeriodo) {
-      // pegar duas posições atras no array que vai para o <select menu>
-      let index = this.anosPeriodosDisponiveis.indexOf(anoPeriodo)
-      if (this.periodos.length === 1) {
+      if(qtd === 1){
         this.periodos[0].descricao = `Último período cursado`
-      } else if (this.periodos.length === 2) {
+      }else if(qtd === 2) {
         this.periodos[0].descricao = `Penúltimo período cursado`
         this.periodos[1].descricao = `Último período cursado`
       }
 
-      this.etapa = 3
+      this.qtdPeriodos = qtd
+      this.etapa = 2
+
       this.$nextTick(()=>{
         this.$refs.inputCHTRef.focus();
       });
-      
     },
     calcular() {
 
@@ -261,7 +233,7 @@ var app = new Vue({
         ip: this.formatarNumero(ip, 2)
       }
 
-      this.etapa = 4
+      this.etapa = 3
 
     },
 
@@ -309,18 +281,6 @@ var app = new Vue({
 
 
       <template v-if="etapa===2">
-
-        <h2>Informe o Ano/Período atual</h2>
-
-        <div>
-          <button v-for="(item, index) of anosPeriodosSelecionaveis"
-            v-on:click="selecionarAnoPeriodoAtual(item)">{{item}}</button>
-        </div>
-
-      </template>
-
-
-      <template v-if="etapa===3">
         <form @submit.prevent="calcular">
           <label for="cht" class="size-label1">CHT</label>
           <input id="cht" class="size-input1" type="number" ref="inputCHTRef" v-model.number="inputCHT" min="1"
@@ -353,7 +313,7 @@ var app = new Vue({
         </form>
       </template>
 
-      <template v-if="etapa===4">
+      <template v-if="etapa===3">
         <resultado-calculo :paragrafosAplicados="paragrafosAplicados" :calc="calc" @update:etapa="etapa = $event"></resultado-calculo>
       </template>
 
