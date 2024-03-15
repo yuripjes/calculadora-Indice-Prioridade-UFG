@@ -8,6 +8,8 @@ const valorMaximoTI=1
 const valorMaximoTA=1
 const valorMaximoIP=110
 
+const LINK_TUTORIAL = 'https://prograd.ufg.br'
+
 const truncarDuasCasasDecimais = (valor) => {
   return (parseInt( valor * 100 ) / 100)
   /*return Number(
@@ -28,6 +30,8 @@ var app = new Vue({
       etapa: 1,
       qtdPeriodos: 0,
       anoPeriodoAtual: null,
+
+      //TODO remover seleção de ano/período
       anosPeriodosDisponiveis: [],//Para facilitar a obtenção dos anos-períodos anteriores ao que o usuário selecionar no combobox
       anosPeriodosSelecionaveis: [], //vai para o combobox, tem os dois itens iniciais e finais removidos
 
@@ -42,6 +46,7 @@ var app = new Vue({
       //TODO verificar se ainda é utilzado
       ultimoId : 0,
 
+      LINK_TUTORIAL: LINK_TUTORIAL
     
     }  
   },
@@ -296,6 +301,10 @@ var app = new Vue({
         <h2>Informe a quantidade de semestres a serem considerados no cálculo</h2>
         <button v-on:click="definirPeriodos(1)">1</button>
         <button v-on:click="definirPeriodos(2)">2</button>
+
+        <div>
+          <a :href="LINK_TUTORIAL">Acesse o tutorial da calculadora</a>
+        </div>
       </template>
 
 
