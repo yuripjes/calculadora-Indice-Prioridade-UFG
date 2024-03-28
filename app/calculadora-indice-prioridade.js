@@ -30,8 +30,12 @@ var app = new Vue({
       etapa: 1,
       qtdPeriodos: 0,
 
-      inputCHT: undefined,
-      inputCHI: undefined,
+      chExigidaNC: undefined,
+      chExigidaNE: undefined,
+
+      chCursadaNC: undefined,
+      chCursadaNE: undefined,
+
       periodos: [],
       inputMatricula: undefined,
 
@@ -53,8 +57,12 @@ var app = new Vue({
 
       this.qtdPeriodos = 0
 
-      this.inputCHT = undefined
-      this.inputCHI = undefined
+      this.chExigidaNC = undefined,
+      this.chExigidaNE = undefined,
+
+      this.chCursadaNC = undefined,
+      this.chCursadaNE = undefined,
+
       this.periodos = []
     },
     //TODO rever se precisará desse método considerando que iremos criar o objeto já preenchido.
@@ -163,7 +171,7 @@ var app = new Vue({
       this.etapa = 2
 
       this.$nextTick(()=>{
-        this.$refs.inputCHTRef.focus();
+        this.$refs.chExigidaNcRef.focus();
       });
     },
     calcular() {
@@ -210,13 +218,24 @@ var app = new Vue({
         });
       });
 
-      qr = somaCHC > 0 ? qr : NaN
+      if(somaCHC > 0) {
 
-      chc = somaCHC > 0 ? this.contabilizaCargaHorariaCursada(somaCHC) : NaN //Para nao exibir CHC maior que zero sem o usuário preencher
-      cha = cha > 0 ? cha : NaN
+        chc = this.contabilizaCargaHorariaCursada(somaCHC)
 
-      cht = somaCHC > 0 ? this.inputCHT : NaN
-      chi = somaCHC > 0 ? this.inputCHI : NaN
+        let somaCHT = Number(this.chExigidaNC) + Number(this.chExigidaNE)
+        let somaCHI = Number(this.chCursadaNC) + Number(this.chCursadaNE)
+
+        cht = somaCHT > 0 ? somaCHT : NaN
+        chi = somaCHI > 0 ? somaCHI : NaN
+
+      } else {
+        cht = NaN
+        chi = NaN
+
+        qr = NaN
+        chc = NaN
+        cha = NaN
+      }
 
       ta = this.calcularTaxaAprovacao(cha, chc)
       ti = this.calcularTaxaIntegralizacao(chi, cht)
@@ -282,14 +301,52 @@ var app = new Vue({
 
       <template v-if="etapa===2">
         <form @submit.prevent="calcular">
-          <label for="cht" class="size-label1">CHT</label>
-          <input id="cht" class="size-input1" type="number" ref="inputCHTRef" v-model.number="inputCHT" min="1"
-            required></input>
-          <br />
+          <div style=" display: grid; 
+          grid-template-columns: 160px min-content min-content; 
+          grid-template-rows: min-content 1fr 1fr; 
+          gap: 5px 5px;">
+            <!-- Primeira linha-->
+            <div>
+            </div>
+            <div>
+              CH Exigida
+            </div>
+            <div>
+              CH Cursada
+            </div>
 
-          <label for="chi" class="size-label1">CHI</label>
-          <input id="chi" class="size-input1" type="number" v-model.number="inputCHI" min="1" required></input>
+            <!-- Segunda linha-->
+            <div>
+              Núcleo Comum (NC):
+            </div>
 
+            <div style="margin-bottom: 0.5rem">
+              <!--<label for="cht" class="size-label1">CH Exigida NC</label>-->
+              <input id="cht" class="size-input1" type="number" ref="chExigidaNcRef" v-model.number="chExigidaNC" min="1"
+                required></input>
+            </div>
+
+            <div style="margin-bottom: 0.5rem">
+              <!--<label for="chi" class="size-label1">CH Cursada NC</label>-->
+              <input id="chi" class="size-input1" type="number" v-model.number="chCursadaNC" min="0" required></input>
+            </div>
+
+            <!-- Terceira linha-->
+            <div>
+              Núcleo Específico (NE):
+            </div>
+
+            <div style="margin-bottom: 0.5rem">
+              <!--<label for="chi" class="size-label1">CH Exigida NE</label>-->
+              <input id="chi" class="size-input1" type="number" v-model.number="chExigidaNE" min="0" required></input>
+            </div>
+
+            <div style="margin-bottom: 0.5rem">
+              <!--<label for="chi" class="size-label1">CH Cursada NE</label>-->
+              <input id="chi" class="size-input1" type="number" v-model.number="chCursadaNE" min="0" required></input>
+            </div>            
+
+          </div>
 
           <div class="semestre-ip" v-for="(itemPeriodo, indexPeriodo) of periodos">
             <h2>{{itemPeriodo.descricao}}</h2>
