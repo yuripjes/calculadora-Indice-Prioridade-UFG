@@ -10,3 +10,8 @@ IP = 100\*TA + 10\*TI – 3\*QR
 
 ## Link da publicação
 [Calculadora de Índice de Prioridade](https://prograd.ufg.br/p/44557-calculadora-de-indice-de-prioridade)
+
+## Gerando arquivo HTML para publicação
+Rodar o comando 
+`node unificador.js` 
+Será gerado o arquivo "arquivo-publicacao.html"
