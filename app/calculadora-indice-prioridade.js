@@ -53,17 +53,19 @@ var app = new Vue({
   mounted() {},
   methods: {
     reiniciarCalculo() {
-      this.etapa = 1
+      if(confirm('Deseja reiniciar os cálculos?\nOs dados serão perdidos.')){
+        this.etapa = 1
 
-      this.qtdPeriodos = 0
+        this.qtdPeriodos = 0
 
-      this.chExigidaNC = undefined,
-      this.chExigidaNE = undefined,
+        this.chExigidaNC = undefined,
+        this.chExigidaNE = undefined,
 
-      this.chCursadaNC = undefined,
-      this.chCursadaNE = undefined,
+        this.chCursadaNC = undefined,
+        this.chCursadaNE = undefined,
 
-      this.periodos = []
+        this.periodos = []
+      }
     },
     //TODO rever se precisará desse método considerando que iremos criar o objeto já preenchido.
     /*
