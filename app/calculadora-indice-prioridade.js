@@ -19,9 +19,6 @@ const truncarDuasCasasDecimais = (valor) => {
 
 var app = new Vue({
   components: {
-    //'Chips': chips,
-    //'SelectButton': selectbutton,
-    //'CardNovaDisciplina': card-nova-disciplina
   },
   data() {
     return {

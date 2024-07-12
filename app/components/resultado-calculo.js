@@ -1,8 +1,5 @@
 Vue.component("resultado-calculo", {
   components: {
-    //Chips: chips,
-    ////SelectButton: selectbutton,
-    //'CardNovaDisciplina': card-nova-disciplina
   },
   props: ["paragrafosAplicados", "calc"],
   data() {
