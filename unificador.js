@@ -1,12 +1,16 @@
 const fs = require("fs");
 
 const NOME_ARQUIVO_GERADO = "arquivo-publicacao.html";
+const URL_SCRIPT_VUE = 'https://unpkg.com/vue@2'
 
 prepararArquivo();
 
 function prepararArquivo() {
   //TODO rodar sanitizer no html gerado
   let html = `<div id="app-calc-ip"></div>`;
+
+  //Importando lib do vue2
+  html+=`\n<script src="${URL_SCRIPT_VUE}"></script>`
 
   html += gerarTagScript(lerArquivo("./app/calculadora-indice-prioridade.js"));
   html += lerArquivosDaPasta("./app/components");

@@ -188,10 +188,10 @@
     vertical-align: middle;
 }
 .btn-check {
-  /*
+  
   position: absolute;
   clip: rect(0, 0, 0, 0);
-  pointer-events: none;*/
+  pointer-events: none;
 }
 .btn-outline-primary {
   color: #0d6efd;
