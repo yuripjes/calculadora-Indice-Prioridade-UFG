@@ -52,9 +52,9 @@ Vue.component("card-nova-disciplina", {
       <div style=" display: flex; flex-direction: column; gap: 10px;">
           <label>Informe a carga horária do componente <b>cursado</b></label>
           <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <template v-for="(item, index) in chPredefinidaOptions">
-                <input type="radio" class="btn-check" :name="'btnradioCh-'+indexPeriodo" :id="'btnradioCh-'+indexPeriodo+'-'+index" autocomplete="off" v-model="chSelecionada" :value="item" :disabled="desativarSeletorCH">
-                <label class="btn btn-outline-primary" :for="'btnradioCh-'+indexPeriodo+'-'+index">{{item}}</label>
+            <template v-for="(item, indexChPredefinida) in chPredefinidaOptions">
+                <input type="radio" class="btn-check" :name="'btnradioCh-'+indexPeriodo" :id="'btnradioCh-'+indexPeriodo+'-'+indexChPredefinida" autocomplete="off" v-model="chSelecionada" :value="item" :disabled="desativarSeletorCH">
+                <label class="btn btn-outline-primary" :for="'btnradioCh-'+indexPeriodo+'-'+indexChPredefinida">{{item}}</label>
             </template>
           </div>
           <input type="number" v-model.number="itemPeriodo.novoItemDisciplina.cargaHoraria" :disabled="desativarInputCH" min="1" max="9999"
@@ -64,9 +64,9 @@ Vue.component("card-nova-disciplina", {
       <div>
           <label>Informe a situação do componente <b>cursado</b></label>
           <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <template v-for="(item, index) in situacaoOptions">
-                <input type="radio" class="btn-check" :name="'btnradioSitacao'+indexPeriodo" :id="'btnradioSitacao-'+indexPeriodo+'-'+index" autocomplete="off" v-model="itemPeriodo.novoItemDisciplina.situacao" :value="item">
-                <label class="btn btn-outline-primary" :for="'btnradioSitacao-'+indexPeriodo+'-'+index">{{item}}</label>
+            <template v-for="(item, indexSituacoes) in situacaoOptions">
+                <input type="radio" class="btn-check" :name="'btnradioSitacao'+indexPeriodo" :id="'btnradioSitacao-'+indexPeriodo+'-'+indexSituacoes" autocomplete="off" v-model="itemPeriodo.novoItemDisciplina.situacao" :value="item">
+                <label class="btn btn-outline-primary" :for="'btnradioSitacao-'+indexPeriodo+'-'+indexSituacoes">{{item}}</label>
             </template>
           </div>
       </div>
