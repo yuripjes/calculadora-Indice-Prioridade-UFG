@@ -39,6 +39,11 @@ Vue.component("card-nova-disciplina", {
     definirCargaHoraria(novoItemDisciplina, cargaHoraria) {
       novoItemDisciplina.cargaHoraria = Number(cargaHoraria);
     },
+    onOutraChSelected(key) {
+      this.$nextTick(()=>{
+      this.$refs[key].focus();
+      });
+    }
   },
   template: `
     <div style="background: #daffff; width: 100%; padding: 2rem; display: flex; flex-direction: row; gap: 10px; ">
@@ -50,7 +55,7 @@ Vue.component("card-nova-disciplina", {
                 <input type="radio" class="btn-check" :name="'btnradioCh-'+indexPeriodo" :id="'btnradioCh-'+indexPeriodo+'-'+indexChPredefinida" autocomplete="off" v-model="chSelecionada" :value="item">
                 <label class="btn btn-outline-primary" :for="'btnradioCh-'+indexPeriodo+'-'+indexChPredefinida">{{item}}</label>
             </template>
-            <input type="radio" class="btn-check" :name="'btnradioCh-'+indexPeriodo" :id="'btnradioCh-'+indexPeriodo+'-outros'" autocomplete="off" v-model="chSelecionada" :value="'OUTRA_CH'">
+            <input type="radio" class="btn-check" :name="'btnradioCh-'+indexPeriodo" :id="'btnradioCh-'+indexPeriodo+'-outros'" autocomplete="off" v-model="chSelecionada" :value="'OUTRA_CH'" @change="onOutraChSelected('NOVO_inputCHDisciplinas_'+indexPeriodo+'_Ref')">
             <label class="btn btn-outline-primary" :for="'btnradioCh-'+indexPeriodo+'-outros'">Outra CH</label>
           </div>
           <input v-if="exibirInputCH" type="number" v-model.number="itemPeriodo.novoItemDisciplina.cargaHoraria"  min="1" max="9999" placeholder="Digite a carga horária"
